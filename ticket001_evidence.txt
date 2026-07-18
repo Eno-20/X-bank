@@ -1,3 +1,19 @@
+/srv
+└── bank
+    ├── accounts
+    │   ├── ACC1001.txt
+    │   ├── ACC1002.txt
+    │   └── ACC1003.txt
+    ├── bin
+    ├── dropbox
+    ├── logs
+    ├── reports
+    ├── transactions
+    └── vault
+
+9 directories, 3 files
+
+Command History
     1  ls
     2  pwd
     3  cd /
@@ -731,3 +747,69 @@
   731  git status
   732  cat ticket-001-open-the-branch.md
   733  history > ~/ticket001_evidence.txt
+  734  less ~/ticket001_evidence.txt
+  735  cp ~/ticket001_evidence.txt ~/X-Bank_pro/X-bank/
+  736  cd ~/X-Bank_pro/X-bank
+  737  git status
+  738  git add ticket001_evidence.txt
+  739  git status
+  740  git commit -m "Eno Complete Ticket #001 Evidence"
+  741  mkdir -p ticket001
+  742  cp -r /srv/bank ticket001/
+  743  ls
+  744  tree
+  745  cp ~/ticket001_evidence.txt ticket001/
+  746  git status
+  747  git add ticket001/
+  748  git commit -m "Comp
+lete Ticket #001 Evidence"
+  749  git push
+  750  git remote -v
+  751  pwdd
+  752  pwd
+  753  git remote set-url origin https://github.com/Eno-20/X-bank.git
+  754  git remote -v
+  755  git status
+  756  git push origin main
+  757  git push -u origin main
+  758  tree
+  759  git status
+  760  pwd
+  761  tree
+  762  tree /srv
+  763  cd /srv
+  764  tree
+  765  cd ~/X-Bank_pro/X-bank
+  766  tree
+  767  rm -rf ticket001
+  768  mkdir srv
+  769  cp -r /srv/bank srv/
+  770  tree
+  771  git add .
+  772  git commit -m "Organize Ticket #001 to match /srv/bank structure"
+  773  git push origin main
+  774  tree /srv/bank > ~/ticket001_evidence.txt
+  775  history >> ~/ticket001_evidence.txt
+  776  cat ~/ticket001_evidence.txt
+  777  history | grep tree
+  778  tree /srv > ~/ticket001_evidence.txt
+  779  echo "" >> ~/ticket001_evidence.txt
+  780  echo "Command History" >> ~/ticket001_evidence.txt
+  781  history >> ~/ticket001_evidence.txt
+  782  cat ~/ticket001_evidence.txt
+  783  less ~/ticket001_evidence.txt
+  784  git status
+  785  git add .
+  786  git commit -m "Update Ticket #001 evidence and bank structure"
+  787* 
+  788  git push origin main
+  789  git status
+  790  git log --oneline -5
+  791  git add .
+  792  git status
+  793  git log --oneline -3
+  794  cat ticket001_evidence.txt
+  795  tree /srv > ~/X-Bank_pro/X-bank/ticket001_evidence.txt
+  796  echo "" >> ~/X-Bank_pro/X-bank/ticket001_evidence.txt
+  797  echo "Command History" >> ~/X-Bank_pro/X-bank/ticket001_evidence.txt
+  798  history >> ~/X-Bank_pro/X-bank/ticket001_evidence.txt

@@ -1,0 +1,138 @@
+1.tellers:x:1001:tunde,amina
+managers:x:1002:ngozi,amina
+auditors:x:1003:kemi
+customers:x:1004:mrjohnson,mrsokafor
+
+2.Output of id for all six accounts (after Amina's promotion)
+uid=1001(tunde) gid=1005(tunde) groups=1005(tunde),1001(tellers)
+
+uid=1002(amina) gid=1006(amina) groups=1006(amina),1001(tellers),1002(managers)
+
+uid=1003(ngozi) gid=1007(ngozi) groups=1007(ngozi),1002(managers)
+
+uid=1004(kemi) gid=1008(kemi) groups=1008(kemi),1003(auditors)
+
+uid=1005(mrjohnson) gid=1009(mrjohnson) groups=1009(mrjohnson),1004(customers)
+
+uid=1006(mrsokafor) gid=1010(mrsokafor) groups=1010(mrsokafor),1004(customers)
+
+3. tunde:x:1001:1005:Teller, Front Desk:/home/tunde:/bin/bash
+Explanation of the seven fields
+
+Field 1 – Username
+
+tunde is the user's login name used to sign in to the system.
+
+Field 2 – Password Placeholder
+
+x indicates that the encrypted password is stored securely in /etc/shadow instead of /etc/passwd.
+
+Field 3 – User ID (UID)
+
+1001 is Tunde's unique numerical user identifier.
+
+Field 4 – Group ID (GID)
+1005 is the numerical identifier of Tunde's primary group.
+
+Field 5 – Comment (GECOS)
+
+Teller, Front Desk describes the user's role or account information.
+
+Field 6 – Home Directory
+
+/home/tunde is the directory where Tunde's personal files are stored.
+
+Field 7 – Login Shell
+
+/bin/bash is the default command-line shell that starts after Tunde logs in.
+
+4. Password hashing algorithm
+
+The system uses the yescrypt password hashing algorithm.
+
+I identified this from the password hashes stored in /etc/shadow. Every password hash begins with the prefix:
+
+$y$
+
+The $y$ prefix indicates that Ubuntu is using the yescrypt hashing algorithm.
+
+5. Output of chage -l tunde
+Last password change                                    : Jul 28, 2026
+Password expires                                        : Oct 26, 2026
+Password inactive                                       : never
+Account expires                                         : never
+Minimum number of days between password change          : 0
+Maximum number of days between password change          : 90
+Number of days of warning before password expires       : 7
+
+This confirms that the staff password policy has been successfully applied with a maximum password age of 90 days and a warning period of 7 days.
+
+6. /etc/sudoers.d/managers rule
+%managers ALL=(ALL:ALL) ALL
+Explanation of the rule
+
+%managers
+
+The rule applies to every user who belongs to the managers group.
+
+ALL (Host)
+
+The rule is valid on all hosts where this sudoers file is used.
+
+(ALL:ALL)
+
+Members of the managers group can run commands as any user and any group.
+
+ALL (Commands)
+
+Managers are permitted to run any command using sudo.
+
+7. Sudo verification
+sudo -l -U ngozi
+User ngozi may run the following commands on DESKTOP-E050TDS:
+    (ALL : ALL) ALL
+sudo -l -U tunde
+User tunde is not allowed to run sudo on DESKTOP-E050TDS.
+Live test
+eno@DESKTOP-E050TDS:~$ su - tunde
+Password:
+
+tunde@DESKTOP-E050TDS:~$ sudo ls /srv/bank/vault
+
+sudo: I'm sorry tunde. I'm afraid I can't do that
+
+Audit trail
+
+During testing on Ubuntu running under WSL2, the failed sudo attempt was not written to /var/log/auth.log or journalctl, even though the denial was enforced successfully.
+
+The live test above confirms that Tunde's sudo request was denied as required.
+
+8. Evidence that mrjohnson is locked but not deleted
+/etc/shadow
+mrjohnson:!$y$j9T$w4ObuVju.inGwzgf.fk4M1$H801bEgL4UJCwX1DjtiLx9b1QyYhlGs7t2jpCEy2sZ8:20662:0:99999:7::19933:
+
+The leading ! in the password field shows that the account has been locked.
+Failed login
+eno@DESKTOP-E050TDS:~$ su - mrjohnson
+Password:
+
+su: Authentication failure
+
+The account cannot be used to log in.
+Home directory still exists
+drwxr-x--- 2 mrjohnson mrjohnson 4096 Jul 28 15:54 /home/mrjohnson
+
+This confirms that the account was locked rather than deleted because the home directory remains intact.
+
+9. Short Answers
+a. Why are /etc/passwd and /etc/shadow two separate files instead of one?
+
+The two files are separated to improve security. /etc/passwd stores general account information that many programs need to read, while /etc/shadow stores encrypted password hashes and can only be accessed by privileged users. Separating them helps protect user passwords from unauthorized access.
+
+b. Why does the bank lock departed customers instead of deleting them?
+
+Locking an account prevents the user from logging in while preserving important records such as files, user IDs, and ownership information. This is useful for audits, investigations, and maintaining accurate historical records without allowing further access to the account.
+
+c. Why does the bank mandate sudo for managers instead of sharing the root password?
+
+Using sudo allows managers to perform administrative tasks without knowing the root password. Every privileged command is logged with the user's identity, providing accountability and making it easier to audit system changes. Sharing the root password would remove this accountability and increase security risks.
